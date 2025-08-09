@@ -1,10 +1,7 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.dto.BasicResponseDto;
-import com.example.demo.dto.UserCreateRequestDto;
-import com.example.demo.dto.UserRequestDto;
-import com.example.demo.dto.UserResponseDto;
+import com.example.demo.dto.*;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,7 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Tag(name = "user", description = "회원 api")
@@ -59,7 +58,7 @@ public class UserApiController {
     @Operation(summary = "회원 정보 조회", description = "id를 통해 회원 정보를 조회")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = {@Content(schema = @Schema(implementation = BasicResponseDto.class))}),
-            @ApiResponse(responseCode = "500", description = "not found"),
+            @ApiResponse(responseCode = "404", description = "not found"),
     })
     public BasicResponseDto<UserResponseDto> findoneUser(
             @PathVariable
@@ -78,4 +77,32 @@ public class UserApiController {
         return new BasicResponseDto<>(true, "member info find", userDto);
     }
 
+    @PostMapping
+    @Operation(summary = "신규 회원 추가", description = "id 겹칠 시 update")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공", content = {@Content(schema = @Schema(implementation = BasicResponseDto.class))}),
+            @ApiResponse(responseCode = "404", description = "not found"),
+    })
+    public UserEntity createUser(@RequestBody UserCreateRequestDto userCreateRequestDto) {
+
+        String code = UUID.randomUUID().toString();
+        String date = LocalDateTime.now().toString();
+
+        UserEntity newUser = new UserEntity();
+        newUser.setId(userCreateRequestDto.getId());
+        newUser.setUser_code(code);
+        newUser.setNickname(userCreateRequestDto.getNickname());
+        newUser.setPw(userCreateRequestDto.getPw());
+        newUser.setAddress(userCreateRequestDto.getAddress());
+        newUser.setCreated_date(date);
+
+        return userService.saveUser(newUser);
+    }
+
+    @DeleteMapping("/delete")
+    @ResponseBody
+    public String delete(@RequestBody UserIdDto userIdDto) {
+        userService.deleteUser(userIdDto.getId());
+        return "delete complete";
+    }
 }

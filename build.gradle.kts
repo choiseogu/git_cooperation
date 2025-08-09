@@ -32,7 +32,7 @@ dependencies {
     implementation("jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0")
     implementation("org.apache.tomcat.embed:tomcat-embed-jasper")
 
-    implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
+    //implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
 
     //implementation ("org.springframework.boot:spring-boot-starter-security")
 

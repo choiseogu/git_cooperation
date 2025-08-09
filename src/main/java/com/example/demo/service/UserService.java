@@ -27,9 +27,9 @@ public class UserService {
     }
 
     @Transactional
-    public void saveUser(UserEntity user) {
+    public UserEntity saveUser(UserEntity user) {
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional
@@ -47,10 +47,5 @@ public class UserService {
     @Transactional
     public void deleteUser(String id) {
         userRepository.delete(id);
-    }
-
-    public void saveMember(UserCreateRequestDto userCreateRequestDto) {
-        UserEntity userEntity = userCreateRequestDto.toEntity();
-        userRepository.save(userEntity);
     }
 }

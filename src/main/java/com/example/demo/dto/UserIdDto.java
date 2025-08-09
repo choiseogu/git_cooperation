@@ -5,9 +5,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserCreateRequestDto {
+public class UserIdDto {
     private String id;
-    private String pw;
-    private String nickname;
-    private String address;
 }
