@@ -78,9 +78,4 @@ public class UserApiController {
         return new BasicResponseDto<>(true, "member info find", userDto);
     }
 
-//    @PostMapping("/create")
-//    public String create(@ModelAttribute UserCreateRequestDto userCreateRequestDto) {
-//        userService.saveUser(userCreateRequestDto);
-//        return "redirect:/member/list";
-//    }
 }

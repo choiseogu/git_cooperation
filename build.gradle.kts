@@ -33,7 +33,8 @@ dependencies {
     implementation("org.apache.tomcat.embed:tomcat-embed-jasper")
 
     implementation ("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2")
-    implementation ("org.springframework.boot:spring-boot-starter-security")
+
+    //implementation ("org.springframework.boot:spring-boot-starter-security")
 
     //classGraph 관련 오류 해결 버전 업데이트
     implementation ("io.github.classgraph:classgraph:4.8.180")
