@@ -1,1 +1,49 @@
-spring.application.name=demo1
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/mydb
+    username: root
+    password: 326030
+
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    #swagger-ui 접근 경로 정의 (기본값이 /swagger-ui.html이다)
+    path: /swagger-ui.html
+    #각 api의 그룹 표시 순서(desc : 내림차순)
+    groups-order: desc
+    #태그 정렬 순서 (alpha : 알파벳 순서 정렬)
+    tags-sorter: alpha
+    #controller 정렬 순서 (method : delete - get - patch - post - put 순 정렬)
+    operations-sorter: method
+    #swagger-ui의 디폴트 url인 petstore html에 대한 비활성화
+    disable-swagger-default-url: true
+    #swagger-ui에서 try 시, request duration(api 요청 시 처리 시간)을 알려주는 설정
+    display-request-duration: true
+  #openAPI 접근 경로 (default 값: /v3/api-docs) -> swagger가 api 명세에 대해 보기 편하게 제공한다면, openAPI는 api명세 데이터 그 자체를 보여줌.
+  api-docs:
+    path: /api-docs
+  #"spring Actuator의 endpoint"(-> 모니터링 및 관리용 api)까지 보여줄 것인지에 대한 설정
+  show-actuator: true
+  #request media type의 기본 값
+  default-consumes-media-type: application/json
+  #response media type의 기본 값
+  default-produces-media-type: application/json
+  #이에 맞는 endpoint에 대한 controller만 swagger-ui에 노출한다.
+  paths-to-match:
+    - /api/**
+
