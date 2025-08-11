@@ -7,12 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "user")
 @Getter @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserEntity {
     @Column
     @Id
@@ -22,4 +21,13 @@ public class UserEntity {
     private String nickname;
     private String address;
     private String created_date;
+
+    public UserEntity() {}
+
+    public UserEntity(String id, String pw, String nickname, String address) {
+        this.id = id;
+        this.pw = pw;
+        this.nickname = nickname;
+        this.address = address;
+    }
 }

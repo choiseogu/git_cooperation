@@ -1,108 +1,64 @@
 package com.example.demo.controller;
 
 
-import com.example.demo.dto.*;
+import com.example.demo.dto.RequestDto;
+import com.example.demo.dto.ResponseDto;
 import com.example.demo.entity.UserEntity;
 import com.example.demo.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import javax.swing.text.html.parser.Entity;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Tag(name = "user", description = "회원 api")
-@RestController
-@RequiredArgsConstructor
+@RestController //REST API 컨트롤러
 @RequestMapping("/api/v1")
 public class UserApiController {
-
     private final UserService userService;
 
-    @GetMapping("/user")
-    @Operation(summary = "회원 전체 조회", description = "url을 통한 회원 전체 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = {@Content(schema = @Schema(implementation = BasicResponseDto.class))}),
-            @ApiResponse(responseCode = "404", description = "not found"),
-    })
-    public BasicResponseDto<List<UserResponseDto>> findAllUser() {
-        List<UserEntity> all_user = userService.findAllUser();
-
-        if (all_user.isEmpty()){
-            return new BasicResponseDto<>(false, "there no user list", null);
-        }
-
-        List<UserResponseDto> user_list = all_user.stream()
-                .map(UserResponseDto::new)
-                .collect(Collectors.toList());
-
-        return new BasicResponseDto<>(true, "Member list retrived successfully", user_list);
-
-    }
-
-    @GetMapping("/user/{id}")
-    @Operation(summary = "회원 정보 조회", description = "id를 통해 회원 정보를 조회")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = {@Content(schema = @Schema(implementation = BasicResponseDto.class))}),
-            @ApiResponse(responseCode = "404", description = "not found"),
-    })
-    public BasicResponseDto<UserResponseDto> findoneUser(
-            @PathVariable
-            @Schema(description = "회원 id", example = "john123")
-            String id
-    ) {
-        UserEntity user = userService.findOne(id);
-
-        if (user == null) {
-            return new BasicResponseDto<>(false, "user not found", null);
-        }
-
-        UserResponseDto userDto = new UserResponseDto(user);
-
-
-        return new BasicResponseDto<>(true, "member info find", userDto);
+    public UserApiController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping
-    @Operation(summary = "신규 회원 추가", description = "id 겹칠 시 update")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "성공", content = {@Content(schema = @Schema(implementation = BasicResponseDto.class))}),
-            @ApiResponse(responseCode = "404", description = "not found"),
-    })
-    public UserEntity createUser(@RequestBody UserCreateRequestDto userCreateRequestDto) {
-
-        String code = UUID.randomUUID().toString();
-        String date = LocalDateTime.now().toString();
-
-        UserEntity newUser = new UserEntity();
-        newUser.setId(userCreateRequestDto.getId());
-        newUser.setUser_code(code);
-        newUser.setNickname(userCreateRequestDto.getNickname());
-        newUser.setPw(userCreateRequestDto.getPw());
-        newUser.setAddress(userCreateRequestDto.getAddress());
-        newUser.setCreated_date(date);
-
-        return userService.saveUser(newUser);
+    public ResponseEntity<ResponseDto> createUser(@RequestBody @Valid RequestDto requestDto) {
+        UserEntity userEntity = userService.createUser(requestDto);
+        return ResponseEntity.ok(new ResponseDto(userEntity)); //dto로 변환해 응답
     }
 
-    @DeleteMapping("/delete")
-    @ResponseBody
-    public String delete(@RequestBody UserIdDto userIdDto) {
-        userService.deleteUser(userIdDto.getId());
-        return "delete complete";
+    @GetMapping
+    public List<ResponseDto> getAllUsers() {
+        return userService.getAllUsers()
+                .stream()
+                .map(ResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDto> getUser(@PathVariable String id) {
+        return userService.getUserById(id)
+                .map(ResponseDto::new)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseDto> updateUser(@PathVariable String id, @RequestBody @Valid RequestDto requestDto) {
+        try{
+            UserEntity userEntity = userService.updateUser(id, requestDto);
+            return ResponseEntity.ok(new ResponseDto(userEntity));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

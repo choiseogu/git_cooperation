@@ -1,51 +1,20 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.UserCreateRequestDto;
+import com.example.demo.dto.RequestDto;
 import com.example.demo.entity.UserEntity;
-import com.example.demo.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
-@Service
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
 
-    public List<UserEntity> findAllUser() {
-        return userRepository.findAll();
-    }
+public interface UserService {
+    UserEntity createUser(RequestDto requestDto);
 
-    public UserEntity findOne(String id) {
-        return userRepository.findOne(id);
-    }
+    UserEntity updateUser(String id, RequestDto requestDto);
 
-    @Transactional
-    public UserEntity saveUser(UserEntity user) {
+    List<UserEntity> getAllUsers();
 
-        return userRepository.save(user);
-    }
+    Optional<UserEntity> getUserById(String id);
 
-    @Transactional
-    public void updateUser(UserEntity user) {
-        userRepository.save(user);
-    }
-
-    @Transactional(isolation = Isolation.DEFAULT)
-    public UserEntity update_addr(String user_id, String address){
-        UserEntity chg_addr = userRepository.findOne(user_id);
-        chg_addr.setAddress(address);
-        return chg_addr;
-    }
-
-    @Transactional
-    public void deleteUser(String id) {
-        userRepository.delete(id);
-    }
+    void deleteUser(String id);
 }
