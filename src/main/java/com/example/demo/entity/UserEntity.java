@@ -24,6 +24,8 @@ public class UserEntity {
 
     public UserEntity() {}
 
+    //leader code fixing
+
     public UserEntity(String id, String pw, String nickname, String address) {
         this.id = id;
         this.pw = pw;
