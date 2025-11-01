@@ -22,6 +22,15 @@ public class UserEntity {
     private String address;
     private String created_date;
 
+//    freshman fix code
+//            .
+//            .
+//            .
+//            .
+//            .
+//    freshman fix end
+
+
     public UserEntity() {}
 
     //leader code fixing
