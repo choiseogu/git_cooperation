@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_prac")
 @Getter @Setter
 public class UserEntity {
     @Column

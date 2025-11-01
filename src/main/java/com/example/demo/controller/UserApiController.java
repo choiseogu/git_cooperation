@@ -25,7 +25,7 @@ public class UserApiController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDto> createUser(@RequestBody @Valid RequestDto requestDto) {
+    public ResponseEntity<ResponseDto> createUser(@RequestBody @Valid RequestDto requestDto) { //@valid : 유효성 검사 수행 어노테이션 -> 유효하지 않는 필드 있다면 400에러 처리
         UserEntity userEntity = userService.createUser(requestDto);
         return ResponseEntity.ok(new ResponseDto(userEntity)); //dto로 변환해 응답
     }
